@@ -293,6 +293,9 @@ var mdCanvas = {
             case 'i-text':
                 fObj =  new fabric.IText(obj.text, obj);
                 break;
+            case 'text':
+                fObj =  new fabric.Text(obj.text, obj);
+                break;
             case 'image':
                 var url = obj.src;
                 this.addUrl(canvas, url, function (urlObj) {

@@ -94,6 +94,9 @@
                 <button  ng-click="addText()" type="button" class="btn btn-default"  data-toggle="tooltip" data-placement="right" title="添加文字">
                     <span class="glyphicon glyphicon-text-size"></span>
                 </button>
+                <button  ng-click="addUrl()" type="button" class="btn btn-default"  data-toggle="tooltip" data-placement="right" title="添加网址">
+                    <span class="glyphicon glyphicon-link"></span>
+                </button>
                 <button  ng-click="addImage()" type="button" class="btn btn-default"  data-toggle="tooltip" data-placement="right" title="添加图片">
                     <span class="glyphicon glyphicon-picture"></span>
                     <input type="file" id="image" name="image" style="display: none;"/>
@@ -264,6 +267,10 @@
                     <div class="cell">
                         <label for="opacity">不透明度:</label>
                         <input value="100" type="number" bind-value-to="opacity">
+                    </div>
+                    <div class="cell">
+                        <label for="opacity">url:</label>
+                        <input value="" type="text" bind-value-to="url">
                     </div>
                     <div class="vertical-line"></div>
                 </div>
@@ -527,6 +534,7 @@
         var canvas = editBoard.canvas;
         var socket = editBoard.socket;
         var canvasCtnEl = editBoard.configBord.canvasCtnEl;
+        var goToUrlTime = null;
 	</script>
     <script src="/app_ui_js/controller/userCtrl.js"></script>
     <script src="/app_ui_js/controller/canvasCtrl.js"></script>

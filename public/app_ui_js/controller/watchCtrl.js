@@ -821,51 +821,51 @@ function addObject($scope){
     //      }));
     //};
 
-    $scope.addText = function() {
-        var coord = mdUtils.getRandomLeftTop();
-        var props = {
-            originX: 'center',
-            originY: 'center',
-            text : '双击编辑文字',
-            left: coord.left,
-            top: coord.top,
-            fontFamily: '微软雅黑',
-            fill: '#000000',
-            hasRotatingPoint: true,
-            centerTransform: true
-        };
-        var iText = new fabric.IText(props.text, props);
+    // $scope.addText = function() {
+    //     var coord = mdUtils.getRandomLeftTop();
+    //     var props = {
+    //         originX: 'center',
+    //         originY: 'center',
+    //         text : '双击编辑文字',
+    //         left: coord.left,
+    //         top: coord.top,
+    //         fontFamily: '微软雅黑',
+    //         fill: '#000000',
+    //         hasRotatingPoint: true,
+    //         centerTransform: true
+    //     };
+    //     var iText = new fabric.IText(props.text, props);
+    //
+    //     mdCanvas.add(canvas, iText.toObject(),function (fIText) {
+    //         $scope.setFreeDrawingMode(false);
+    //         //mdCanvas.packageObj(fIText);
+    //         //socket.emit('addObject',mdCanvas.toObject(fIText,false));
+    //         fIText.on('editing:entered', editorEnterFire);
+    //         fIText.on('editing:exited', function () {
+    //             console.log('退出编辑');
+    //         });
+    //         fIText.on('selection:changed', function () {
+    //             $scope.setText($scope.getText());
+    //             canvas.renderAll();
+    //         });
+    //     });
+    // };
 
-        mdCanvas.add(canvas, iText.toObject(),function (fIText) {
-            $scope.setFreeDrawingMode(false);
-            //mdCanvas.packageObj(fIText);
-            //socket.emit('addObject',mdCanvas.toObject(fIText,false));
-            fIText.on('editing:entered', editorEnterFire);
-            fIText.on('editing:exited', function () {
-                console.log('退出编辑');
-            });
-            fIText.on('selection:changed', function () {
-                $scope.setText($scope.getText());
-                canvas.renderAll();
-            });
-        });
-    };
-
-    var addShape = function(shapeName) {
-        console.log('adding shape', shapeName);
-        var coord = mdUtils.getRandomLeftTop();
-        fabric.loadSVGFromURL('../assets/' + shapeName + '.svg', function(objects, options) {
-            var loadedObject = fabric.util.groupSVGElements(objects, options);
-            loadedObject.set({
-                originX: 'center',
-                originY: 'center',
-                left: coord.left,
-                top: coord.top,
-                angle: mdUtils.getRandomInt(-10, 10)
-            }).setCoords();
-            canvas.add(loadedObject);
-        });
-    };
+    // var addShape = function(shapeName) {
+    //     console.log('adding shape', shapeName);
+    //     var coord = mdUtils.getRandomLeftTop();
+    //     fabric.loadSVGFromURL('../assets/' + shapeName + '.svg', function(objects, options) {
+    //         var loadedObject = fabric.util.groupSVGElements(objects, options);
+    //         loadedObject.set({
+    //             originX: 'center',
+    //             originY: 'center',
+    //             left: coord.left,
+    //             top: coord.top,
+    //             angle: mdUtils.getRandomInt(-10, 10)
+    //         }).setCoords();
+    //         canvas.add(loadedObject);
+    //     });
+    // };
 
     $scope.maybeLoadShape = function(e) {
         var $el = $(e.target).closest('button.shape');
@@ -1108,17 +1108,17 @@ function addCanvasListener($scope) {
     }
 
     canvas
-        .on('object:selected', objectSelectedLtn)
-        .on('path:created', pathCreatedLtn)
-        //.on('mouse:up', mouseUpLtn)
+        //.on('object:selected', objectSelectedLtn)
+        //.on('path:created', pathCreatedLtn)
+        .on('mouse:up', mouseUpLtn)
         //.on('mouse:move', mouseMoveLtn)
-        .on('object:scaling', objectScalingLtn)
-        .on('selection:created', selectCreatedLtn)
-        .on('before:selection:cleared', beforeSelectClearedLtn)
-        .on('object:modified', objectModifiedLtn)
-        //.on('mouse:down', mouseDownLtn)
-        .on('object:removed', objectRemovedLtn)
-        .on('selection:cleared', selectClearedLtn);
+        //.on('object:scaling', objectScalingLtn)
+        //.on('selection:created', selectCreatedLtn)
+        //.on('before:selection:cleared', beforeSelectClearedLtn)
+        //.on('object:modified', objectModifiedLtn)
+        .on('mouse:down', mouseDownLtn)
+        //.on('object:removed', objectRemovedLtn)
+        //.on('selection:cleared', selectClearedLtn);
 
     function objectRemovedLtn(e){
     }
@@ -1134,19 +1134,32 @@ function addCanvasListener($scope) {
         socket.emit('lockState', idArr);
     }
 
+    var matchUrl = /^((ht|f)tps?):\/\/([\w\-]+(\.[\w\-]+)*\/)*[\w\-]+(\.[\w\-]+)*\/?(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?/;
     function mouseDownLtn(e){
         isMouseDown = true;
         if(ctrlKeyDown){
-            mouseXOnPan = event.clientX;
-            mouseYOnPan = event.clientY;
-            canvasXOnPan = canvasCtnEl.offsetLeft;
-            canvasYOnPan = canvasCtnEl.offsetTop;
+            // mouseXOnPan = event.clientX;
+            // mouseYOnPan = event.clientY;
+            // canvasXOnPan = canvasCtnEl.offsetLeft;
+            // canvasYOnPan = canvasCtnEl.offsetTop;
         } else {
             var obj = e.target;
             if(!obj) return;
-            if (obj._element&&obj._element.tagName === 'VIDEO') {
-                var myVideo = obj._element;
-                myVideo.paused ? myVideo.play() : myVideo.pause();
+            // if (obj._element&&obj._element.tagName === 'VIDEO') {
+            //     var myVideo = obj._element;
+            //     myVideo.paused ? myVideo.play() : myVideo.pause();
+            // }
+            if(obj.type === "text"){
+                var time = new Date().getTime();
+                if(!goToUrlTime){
+                    goToUrlTime = time;
+                    return;
+                }else if(time - goToUrlTime < 300){
+                    if(matchUrl.test(obj.text))
+                        window.open(obj.text);
+                }else{
+                    goToUrlTime = time;
+                }
             }
         }
     }
@@ -1564,7 +1577,7 @@ canvasModule.controller('CanvasCtrl', function($scope,$http) {
     //initContextMenu($scope);
     //initKeyBoard($scope);
     initCanvasSocket($scope);
-    //addCanvasListener($scope);
+    addCanvasListener($scope);
     $scope.getSelectedFiles = function () {
         return [{id: this.canvas.id}];
     }

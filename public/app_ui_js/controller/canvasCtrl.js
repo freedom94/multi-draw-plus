@@ -851,6 +851,34 @@ function addObject($scope){
         });
     };
 
+    $scope.addUrl = function() {
+        var coord = mdUtils.getRandomLeftTop();
+        var props = {
+            originX: 'center',
+            originY: 'center',
+            text : 'https://www.baidu.com/',
+            left: coord.left,
+            top: coord.top,
+            fontFamily: '微软雅黑',
+            fill: '#000000',
+            hasRotatingPoint: true,
+            centerTransform: true
+        };
+        var Text = new fabric.Text(props.text, props);
+
+        mdCanvas.add(canvas, Text.toObject(),function (Path) {
+            $scope.setFreeDrawingMode(false);
+            Text.on('editing:entered', editorEnterFire);
+            Text.on('editing:exited', function () {
+              console.log('退出编辑');
+            });
+            Text.on('selection:changed', function () {
+                $scope.setText($scope.getText());
+                canvas.renderAll();
+            });
+        });
+    };
+
     var addShape = function(shapeName) {
         console.log('adding shape', shapeName);
         var coord = mdUtils.getRandomLeftTop();
@@ -1128,12 +1156,17 @@ function addCanvasListener($scope) {
     }
 
     function objectSelectedLtn(e){
+        console.log("objectSelectedLtn");
         updateScope();
         var selectObj = e.target;
         var idArr = mdCanvas.getSelectedItemId(canvas,selectObj);
+        if(!selectObj._objects){
+
+        }
         socket.emit('lockState', idArr);
     }
 
+    var matchUrl = /^((ht|f)tps?):\/\/([\w\-]+(\.[\w\-]+)*\/)*[\w\-]+(\.[\w\-]+)*\/?(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?/;
     function mouseDownLtn(e){
         isMouseDown = true;
         if(ctrlKeyDown){
@@ -1147,6 +1180,18 @@ function addCanvasListener($scope) {
             if (obj._element&&obj._element.tagName === 'VIDEO') {
                 var myVideo = obj._element;
                 myVideo.paused ? myVideo.play() : myVideo.pause();
+            }
+            if(obj.type === "text"){
+                var time = new Date().getTime();
+                if(!goToUrlTime){
+                    goToUrlTime = time;
+                    return;
+                }else if(time - goToUrlTime < 300){
+                    if(matchUrl.test(obj.text))
+                        window.open(obj.text);
+                }else{
+                  goToUrlTime = time;
+                }
             }
         }
     }
