@@ -1187,8 +1187,10 @@ function addCanvasListener($scope) {
                     goToUrlTime = time;
                     return;
                 }else if(time - goToUrlTime < 300){
-                    if(matchUrl.test(obj.text))
-                        window.open(obj.text);
+                    if(matchUrl.test(obj.text)){
+                        socket.emit('hrefTo', obj.text);
+                        window.location.href = obj.text;
+                    }
                 }else{
                   goToUrlTime = time;
                 }
@@ -1483,6 +1485,11 @@ function initCanvasSocket($scope){
             canvas[p] = data[p];
         }
         $scope.$$phase || $scope.$digest();
+    });
+
+    socket.on('hrefTo', function (value) {
+        console.log("socket: hrefTo");
+        window.location.href = value
     });
 }
 function httpOpt($scope,$http){

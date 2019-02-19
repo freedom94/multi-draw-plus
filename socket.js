@@ -167,6 +167,10 @@ exports.startSocketIo = function(server,db,configCallback){
             socket.broadcast.to(room).emit('unlockState', data);
         });
 
+        socket.on('hrefTo',function(data){
+            socket.broadcast.to(room).emit('hrefTo', data);
+        });
+
         socket.on('disconnect',function(){
             if(room){
                 if(addedUser){
