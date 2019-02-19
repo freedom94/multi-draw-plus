@@ -176,8 +176,15 @@ label {
 /*canvas容器*/
 #canvasCtn{
     position: relative;
-    width: 1700px;
+    width: 2900px;
     height: 1500px;
+}
+
+#frame-block{
+    display: none;
+    position: absolute;
+    width: 750px;
+    height: 530px;
 }
 
 

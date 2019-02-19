@@ -171,6 +171,10 @@ exports.startSocketIo = function(server,db,configCallback){
             socket.broadcast.to(room).emit('hrefTo', data);
         });
 
+        socket.on('closeIframe',function(data){
+            socket.broadcast.to(room).emit('closeIframe', data);
+        });
+
         socket.on('disconnect',function(){
             if(room){
                 if(addedUser){

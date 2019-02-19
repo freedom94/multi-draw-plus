@@ -13,7 +13,7 @@ function editorEnterFire(e){
     canvas.remove(obj);
     // show input area
     $itext.css({
-        left: (1700-canvas.width)/2+obj.left-obj.width/2,
+        left: (2900-canvas.width)/2+obj.left-obj.width/2,
         top: (1500-canvas.height)/2+obj.top-obj.height/2,
         'line-height': obj.lineHeight,
         'font-family': obj.fontFamily,
